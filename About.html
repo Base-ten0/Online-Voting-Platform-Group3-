@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f4f6f9;
+        padding-top: 70px;
+        padding-bottom: 70px;
+    }
+    .navbar, .footer {
+        background: url('https://upload.wikimedia.org/wikipedia/commons/4/4f/Flag_of_Cameroon.svg') no-repeat center center;
+        background-size: cover;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        font-weight: bold;
+        font-size: 1.2em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    }
+    .navbar a {
+        color: white;
+        margin: 0 15px;
+        text-decoration: none;
+        font-weight: normal;
+    }
+    .container {
+        padding: 20px;
+        max-width: 900px;
+        margin: auto;
+    }
+    h2 {
+        background: rgb(11, 100, 11);
+        color: white;
+        padding: 10px;
+        border-radius: 4px;
+    }
+    p.description {
+        font-size: 1.1em;
+        line-height: 1.6;
+        background: white;
+        padding: 15px;
+        border-radius: 4px;
+        box-shadow: rgb(22, 130, 22);
+    }
+    .team {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+    .member {
+        background: white;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: center;
+    }
+    .member img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+</style>
+</head>
+<body>
+
+    <div class="navbar" style="position: relative;">
+        <span class="cameroon-star" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #fcd116; font-size: 24px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">★</span>
+        ABOUT US
+        <div>
+            <a href="result.html">View Results</a>
+            <a href="vote.html">Vote Page</a>
+             <a href="logging.html">Loggout Page</a> 
+        </div>
+    </div>
+
+<div class="container">
+    <h2>About Our Platform</h2>
+    <p class="description">
+        Our voting platform is designed to make elections fair, transparent, and easy to access for everyone. 
+        We are dedicated to ensuring that every vote counts and that results are displayed in real-time. 
+        Our mission is to use technology to improve democracy by making the voting process more secure, 
+        user-friendly, and inclusive. The team behind this platform works tirelessly to maintain trust, 
+        accuracy, and efficiency in every election we host.
+    </p>
+
+    <h2>Meet Our Team</h2>
+    <div id="teamList" class="team"></div>
+</div>
+
+<div class="footer">Proudly Serving Cameroon</div>
+
+<script>
+    function loadTeam() {
+        const team = JSON.parse(localStorage.getItem("team")) || [];
+        const teamList = document.getElementById("teamList");
+        teamList.innerHTML = "";
+
+        if (team.length === 0) {
+            teamList.innerHTML = "<p>No team members available.</p>";
+            return;
+        }
+
+        team.forEach(member => {
+            teamList.innerHTML += `
+                <div class="member">
+                    <img src="${member.image}" alt="${member.name}">
+                    <h3>${member.name}</h3>
+                    <p>${member.role}</p>
+                </div>
+            `;
+        });
+    }
+
+    loadTeam();
+</script>
+
+</body>
+</html>
