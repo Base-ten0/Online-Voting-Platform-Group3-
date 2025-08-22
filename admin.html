@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Complete Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5; 
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #007a5e 0%, #ce1126 50%, #fcd116 100%);
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            position: relative;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007a5e;
+            font-size: 1.3em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        input[type="text"], input[type="number"], input[type="file"], input[type="date"], input[type="password"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            display: block;
+        }
+        button {
+            background: #007a5e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            transition: background 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #005a45;
+        }
+
+        button.delete {
+            background: #dc3545;
+            padding: 5px 10px;
+            font-size: 12px;
+            width: auto;
+        }
+
+        button.delete:hover {
+            background: #c82333;
+        }
+
+        button.publish {
+            background: #28a745;
+        }
+
+        button.publish:hover {
+            background: #218838;
+        }
+
+        button.unpublish {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        button.unpublish:hover {
+            background: #e0a800;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            word-wrap: break-word;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .candidate-image, .member-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .status-published {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-unpublished {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .vote-input {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #007a5e 0%, #ce1126 50%, #fcd116 100%);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 0.9em;
+        }
+
+        .content-wrapper {
+            margin-bottom: 60px;
+        }
+
+        .results-summary {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .total-votes {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #007a5e;
+        }
+
+        .candidate-card {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .candidate-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .candidate-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .candidate-party, .candidate-position {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        .vote-count {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #007a5e;
+        }
+
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 20px;
+            margin: 8px 0;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #007a5e, #28a745);
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            transition: width 1s ease-in-out;
+        }
+
+        .winner-badge {
+            background: #ffd700;
+            color: #333;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 1em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #007a5e;
+            font-size: 1em;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar h1 {
+                font-size: 1.2em;
+            }
+
+            .container {
+                padding: 5px;
+                margin: 10px auto;
+            }
+
+            .candidate-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .candidate-image {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Admin Dashboard - Complete Management</h1>
+        <div>
+            <a href="result.html">View Results</a>
+            <a href="login.html">Login</a>
+        </div>
+    </div>
+    <div class="content-wrapper">
+    <div class="container">
+            <!-- Election Management Section -->
+            <div class="section">
+                <h2>Election Management</h2>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="electionName">Election Name:</label>
+                            <input type="text" id="electionName" placeholder="Enter election name" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="electionType">Election Type:</label>
+                            <select id="electionType" required>
+                                <option value="national">National Election</option>
+                                <option value="school">School Election</option>
+                                <option value="local">Local Election</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="electionStatus">Status:</label>
+                            <select id="electionStatus" required>
+                                <option value="draft">Draft</option>
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="electionStart">Start Date:</label>
+                            <input type="date" id="electionStart" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="electionEnd">End Date:</label>
+                            <input type="date" id="electionEnd" required>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="createElection()">Create Election</button>
+            </div>
+
+            <!-- Election Selection -->
+            <div class="section">
+                <h2>Select Election</h2>
+                <div class="form-group">
+                    <label for="currentElection">Current Election:</label>
+                    <select id="currentElection" onchange="switchElection()">
+                        <option value="">Select an election</option>
+                    </select>
+                </div>
+                <div style="margin-top: 10px;">
+                    <button class="delete" onclick="deleteSelectedElection()">Delete Selected Election</button>
+                </div>
+            </div>
+
+            <!-- Add Candidate Section -->
+            <div class="section">
+                <h2>Add Candidate to Selected Election</h2>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="candidateName">Candidate Name:</label>
+                            <input type="text" id="candidateName" placeholder="Enter candidate name" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="candidateParty">Party:</label>
+                            <input type="text" id="candidateParty" placeholder="Enter party name" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="candidatePosition">Position:</label>
+                            <input type="text" id="candidatePosition" placeholder="Enter position" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="candidateImageFile">Candidate Photo:</label>
+                            <input type="file" id="candidateImageFile" accept="image/*" onchange="previewCandidateImage(event)" required>
+                            <img id="candidatePreview" class="preview-image" style="display: none;">
+                            <input type="hidden" id="candidateImageData">
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addCandidate()">Add Candidate</button>
+            </div>
+
+            <!-- Candidates List -->
+            <div class="section">
+                <h2>Current Candidates</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Party</th>
+                                <th>Position</th>
+                                <th>Votes</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidateTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Team Management Section -->
+            <div class="section">
+                <h2>Manage Team Members</h2>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="memberName">Member Name:</label>
+                            <input type="text" id="memberName" placeholder="Enter member name" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="memberRole">Role:</label>
+                            <input type="text" id="memberRole" placeholder="Enter role" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="memberImageFile">Member Photo:</label>
+                    <input type="file" id="memberImageFile" accept="image/*" onchange="previewMemberImage(event)" required>
+                    <img id="memberPreview" class="preview-image" style="display: none;">
+                    <input type="hidden" id="memberImageData">
+                </div>
+                <button onclick="addMember()">Add Team Member</button>
+
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Management -->
+            <div class="section">
+                <h2>Admin Management</h2>
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="newAdminName">New Admin Username:</label>
+                            <input type="text" id="newAdminName" placeholder="Enter username for new admin" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="newAdminPassword">Password:</label>
+                            <input type="password" id="newAdminPassword" placeholder="Enter password" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="confirmAdminPassword">Confirm Password:</label>
+                            <input type="password" id="confirmAdminPassword" placeholder="Confirm password" required>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addAdmin()">Add New Admin</button>
+
+                <h3 style="margin-top: 20px;">Current Admins</h3>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pending Actions -->
+            <div class="section">
+                <h2>Pending Admin Actions</h2>
+                <div id="pendingActions">
+                    <p>No pending actions</p>
+                </div>
+            </div>
+
+            <!-- Result Management -->
+            <div class="section">
+                <h2>Result Management</h2>
+                <p>Current Status: <span id="resultStatus" class="status-unpublished">NOT PUBLISHED</span></p>
+                
+                <div id="resultForm">
+                    <h3>Enter Vote Results:</h3>
+                    <div id="candidateResults"></div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="publish" onclick="requestPublishResults()">Request Publish Results</button>
+                        <button class="unpublish" onclick="requestUnpublishResults()">Request Unpublish Results</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Proudly Serving Cameroon - Admin Dashboard
+    </div>
+
+    <script>
+        // Initialize admin dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadElections();
+            loadTeamMembers();
+            loadAdmins();
+            loadResultStatus();
+        });
+
+        // Load elections for result management
+        function loadElections() {
+            const elections = JSON.parse(localStorage.getItem("elections")) || [];
+            const select = document.getElementById("currentElection");
+            
+            if (select) {
+                select.innerHTML = '<option value="">Select an election</option>';
+                elections.forEach(election => {
+                    const option = document.createElement("option");
+                    option.value = election.id;
+                    option.textContent = election.name;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        // Load team members
+        function loadTeamMembers() {
+            const members = JSON.parse(localStorage.getItem("team")) || [];
+            const table = document.getElementById("teamTable");
+            
+            if (table) {
+                table.innerHTML = "";
+                members.forEach((member, index) => {
+                    table.innerHTML += `
+                        <tr>
+                            <td><img src="${member.image}" alt="${member.name}" class="member-image"></td>
+                            <td>${member.name}</td>
+                            <td>${member.role}</td>
+                            <td>
+                                <button class="delete" onclick="deleteMember(${index})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        // Load admins
+        function loadAdmins() {
+            const admins = JSON.parse(localStorage.getItem("admins")) || [];
+            const table = document.getElementById("adminTable");
+            
+            if (table) {
+                table.innerHTML = "";
+                admins.forEach((admin, index) => {
+                    table.innerHTML += `
+                        <tr>
+                            <td>${admin.username}</td>
+                            <td>${admin.role}</td>
+                            <td>${admin.status}</td>
+                            <td>
+                                <button class="delete" onclick="deleteAdmin(${index})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        // Load result status
+        function loadResultStatus() {
+            const elections = JSON.parse(localStorage.getItem("elections")) || [];
+            const publishedResults = JSON.parse(localStorage.getItem("publishedResults")) || {};
+            
+            // Update election dropdown for results
+            const electionSelect = document.getElementById("currentElection");
+            if (electionSelect) {
+                electionSelect.addEventListener('change', loadCandidatesForResults);
+            }
+            
+            updateResultStatus();
+        }
+
+        // Load candidates for results
+        function loadCandidatesForResults() {
+            const electionId = document.getElementById("currentElection")?.value;
+            if (!electionId) return;
+
+            const election = JSON.parse(localStorage.getItem("elections")) || []
+                .find(e => e.id === electionId);
+            
+            if (!election) return;
+
+            const container = document.getElementById("candidateResults");
+            container.innerHTML = "";
+
+            const candidates = election.candidates || [];
+            candidates.forEach((candidate, index) => {
+                container.innerHTML += `
+                    <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="${candidate.image}" alt="${candidate.name}" style="width: 50px; height: 50px; border-radius: 50%;">
+                            <div>
+                                <strong>${candidate.name}</strong> - ${candidate.party}
+                                <br>
+                                <small>${candidate.position}</small>
+                            </div>
+                            <div style="margin-left: auto;">
+                                <label>Votes:</label>
+                                <input type="number" id="votes-${candidate.id}" value="${candidate.votes || 0}" min="0" class="vote-input">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Update result status display
+        function updateResultStatus() {
+            const elections = JSON.parse(localStorage.getItem("elections")) || [];
+            const publishedResults = JSON.parse(localStorage.getItem("publishedResults")) || {};
+            
+            const publishedCount = Object.keys(publishedResults).length;
+            const statusElement = document.getElementById("resultStatus");
+            
+            if (statusElement) {
+                if (publishedCount > 0) {
+                    statusElement.textContent = `PUBLISHED (${publishedCount} election${publishedCount > 1 ? 's' : ''})`;
+                    statusElement.className = "status-published";
+                } else {
+                    statusElement.textContent = "NOT PUBLISHED";
+                    statusElement.className = "status-unpublished";
+                }
+            }
+        }
+
+        // Request to publish results
+        function requestPublishResults() {
+            const electionId = document.getElementById("currentElection")?.value;
+            if (!electionId) {
+                alert("Please select an election first");
+                return;
+            }
+
+            const elections = JSON.parse(localStorage.getItem("elections")) || [];
+            const election = elections.find(e => e.id === electionId);
+            
+            if (!election) {
+                alert("Election not found");
+                return;
+            }
+
+            // Update votes from form
+            const candidates = election.candidates || [];
+            candidates.forEach(candidate => {
+                const votesInput = document.getElementById(`votes-${candidate.id}`);
+                if (votesInput) {
+                    candidate.votes = parseInt(votesInput.value) || 0;
+                }
+            });
+
+            // Save updated election
+            localStorage.setItem("elections", JSON.stringify(elections));
+
+            // Publish results
+            const publishedResults = JSON.parse(localStorage.getItem("publishedResults")) || {};
+            publishedResults[electionId] = true;
+            localStorage.setItem("publishedResults", JSON.stringify(publishedResults));
+
+            alert(`Results for ${election.name} have been published!`);
+            updateResultStatus();
+            loadCandidatesForResults();
+        }
+
+        // Request to unpublish results
+        function requestUnpublishResults() {
+            const electionId = document.getElementById("currentElection")?.value;
+            if (!electionId) {
+                alert("Please select an election first");
+                return;
+            }
+
+            const elections = JSON.parse(localStorage.getItem("elections")) || [];
+            const election = elections.find(e => e.id === electionId);
+            
+            if (!election) {
+                alert("Election not found");
+                return;
+            }
+
+            // Unpublish results
+            const publishedResults = JSON.parse(localStorage.getItem("publishedResults")) || {};
+            delete publishedResults[electionId];
+            localStorage.setItem("publishedResults", JSON.stringify(publishedResults));
+
+            alert(`Results for ${election.name} have been unpublished!`);
+            updateResultStatus();
+        }
+
+        // Delete team member
+        function deleteMember(index) {
+            if (confirm("Are you sure you want to delete this team member?")) {
+                const members = JSON.parse(localStorage.getItem("team")) || [];
+                members.splice(index, 1);
+                localStorage.setItem("team", JSON.stringify(members));
+                loadTeamMembers();
+            }
+        }
+
+        // Delete admin
+        function deleteAdmin(index) {
+            if (confirm("Are you sure you want to delete this admin?")) {
+                const admins = JSON.parse(localStorage.getItem("admins")) || [];
+                admins.splice(index, 1);
+                localStorage.setItem("admins", JSON.stringify(admins));
+                loadAdmins();
+            }
+        }
+
+        // Preview images
+        function previewCandidateImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("candidatePreview").src = e.target.result;
+                    document.getElementById("candidatePreview").style.display = "block";
+                    document.getElementById("candidateImageData").value = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewMemberImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("memberPreview").src = e.target.result;
+                    document.getElementById("memberPreview").style.display = "block";
+                    document.getElementById("memberImageData").value = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Create election
+        function createElection() {
+            const name = document.getElementById("electionName")?.value.trim();
+            const type = document.getElementById("electionType")?.value;
+            const status = document.getElementById("electionStatus")?.value;
+            const startDate = document.getElementById("electionStart")?.value;
+            const endDate = document.getElementById("electionEnd")?.value;
+
+            if (!name || !type || !status || !startDate || !endDate) {
+                alert("Please fill all required fields");
+                return;
+            }
+
+            const elections = JSON.parse(localStorage.getItem("elections")) || [];
+            const newElection = {
+                id: `election-${Date.now()}`,
+                name: name,
+                type: type,
+                status: status,
+                startDate: startDate,
+                endDate: endDate,
+                candidates: []
+            };
+
+            elections.push(newElection);
+            localStorage.setItem("elections", JSON.stringify(elections));
+            
+            // Clear form
+            document.getElementById("electionName").value = "";
+            document.getElementById("electionStart").value = "";
+            document.getElementById("electionEnd").value = "";
+
+            loadElections();
+            alert("Election created successfully!");
+        }
+
+        // Add candidate
+        function addCandidate() {
+            const electionId = document.getElementById("currentElection")?.value;
+            if (!electionId) {
+                alert("Please select an election first");
+                return;
+            }
+
+            const name = document.getElementById("candidateName")?.value.trim();
+            const party = document.getElementById("candidateParty")?.value.trim();
+            const position = document.getElementById("candidatePosition")?.value.trim();
+            const imageData = document.getElementById("candidateImageData")?.value;
+
+            if (!name || !party || !position || !imageData) {
+                alert("Please fill all fields and upload an image");
+                return;
+            }
+
+            const elections = JSON.parse(localStorage.getItem("elections")) || [];
+            const electionIndex = elections.findIndex(e => e.id === electionId);
+
+            if (electionIndex !== -1) {
+                const newCandidate = {
+                    id: `candidate-${Date.now()}`,
+                    name: name,
+                    party: party,
+                    position: position,
+                    image: imageData,
+                    votes: 0
+                };
+
+                elections[electionIndex].candidates.push(newCandidate);
+                localStorage.setItem("elections", JSON.stringify(elections));
+
+                // Clear form
+                document.getElementById("candidateName").value = "";
+                document.getElementById("candidateParty").value = "";
+                document.getElementById("candidatePosition").value = "";
+                document.getElementById("candidateImageFile").value = "";
+                document.getElementById("candidateImageData").value = "";
+                document.getElementById("candidatePreview").style.display = "none";
+
+                loadCandidatesForElection(electionId);
+                loadCandidatesForResults();
+                alert("Candidate added successfully!");
+            }
+        }
+
+        // Add team member
+        function addMember() {
+            const name = document.getElementById("memberName")?.value.trim();
+            const role = document.getElementById("memberRole")?.value.trim();
+            const imageData = document.getElementById("memberImageData")?.value;
+
+            if (!name || !role || !imageData) {
+                alert("Please fill all fields and upload an image");
+                return;
+            }
+
+            const members = JSON.parse(localStorage.getItem("team")) || [];
+            const newMember = {
+                id: `member-${Date.now()}`,
+                name: name,
+                role: role,
+                image: imageData
+            };
+
+            members.push(newMember);
+            localStorage.setItem("team", JSON.stringify(members));
+
+            // Clear form
+            document.getElementById("memberName").value = "";
+            document.getElementById("memberRole").value = "";
+            document.getElementById("memberImageFile").value = "";
+            document.getElementById("memberImageData").value = "";
+            document.getElementById("memberPreview").style.display = "none";
+
+            loadTeamMembers();
+            alert("Team member added successfully!");
+        }
+
+        // Add admin
+        function addAdmin() {
+            const username = document.getElementById("newAdminName")?.value.trim();
+            const password = document.getElementById("newAdminPassword")?.value;
+            const confirmPassword = document.getElementById("confirmAdminPassword")?.value;
+
+            if (!username || !password || !confirmPassword) {
+                alert("Please fill all fields");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match");
+                return;
+            }
+
+            const admins = JSON.parse(localStorage.getItem("admins")) || [];
+            
+            if (admins.find(admin => admin.username === username)) {
+                alert("Username already exists");
+                return;
+            }
+
+            const newAdmin = {
+                id: `admin-${Date.now()}`,
+                username: username,
+                password: password,
+                role: "admin",
+                status: "active"
+            };
+
+            admins.push(newAdmin);
+            localStorage.setItem("admins", JSON.stringify(admins));
+
+            // Clear form
+            document.getElementById("newAdminName").value = "";
+            document.getElementById("newAdminPassword").value = "";
+            document.getElementById("confirmAdminPassword").value = "";
+
+            loadAdmins();
+            alert("Admin added successfully!");
+        }
+
+        // Load candidates for specific election
+        function loadCandidatesForElection(electionId) {
+            const elections = JSON.parse(localStorage.getItem("elections")) || [];
+            const election = elections.find(e => e.id === electionId);
+            
+            if (!election) return;
+
+            const candidates = election.candidates || [];
+            const table = document.getElementById("candidateTable");
+            
+            if (table) {
+                table.innerHTML = "";
+                candidates.forEach((candidate, index) => {
+                    table.innerHTML += `
+                        <tr>
+                            <td><img src="${candidate.image}" alt="${candidate.name}" class="candidate-image"></td>
+                            <td>${candidate.name}</td>
+                            <td>${candidate.party}</td>
+                            <td>${candidate.position}</td>
+                            <td>${candidate.votes || 0}</td>
+                            <td>
+                                <button class="delete" onclick="deleteCandidate('${electionId}', ${index})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        // Delete candidate
+        function deleteCandidate(electionId, candidateIndex) {
+            if (confirm("Are you sure you want to delete this candidate?")) {
+                const elections = JSON.parse(localStorage.getItem("elections")) || [];
+                const electionIndex = elections.findIndex(e => e.id === electionId);
+
+                if (electionIndex !== -1) {
+                    elections[electionIndex].candidates.splice(candidateIndex, 1);
+                    localStorage.setItem("elections", JSON.stringify(elections));
+                    loadCandidatesForElection(electionId);
+                    loadCandidatesForResults();
+                }
+            }
+        }
+
+        // Switch election
+        function switchElection() {
+            const electionId = document.getElementById("currentElection")?.value;
+            if (electionId) {
+                localStorage.setItem("currentElection", electionId);
+                loadCandidatesForElection(electionId);
+                loadCandidatesForResults();
+            }
+        }
+
+        // Initialize
+        loadElections();
+        loadTeamMembers();
+        loadAdmins();
+        loadResultStatus();
+
+        // Delete selected election
+        function deleteSelectedElection() {
+            const electionId = document.getElementById("currentElection")?.value;
+            
+            if (!electionId) {
+                alert("Please select an election to delete");
+                return;
+            }
+
+            const elections = JSON.parse(localStorage.getItem("elections")) || [];
+            const election = elections.find(e => e.id === electionId);
+            
+            if (!election) {
+                alert("Selected election not found");
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete the election: "${election.name}"? This action cannot be undone.`)) {
+                // Remove the election from elections array
+                const updatedElections = elections.filter(e => e.id !== electionId);
+                localStorage.setItem("elections", JSON.stringify(updatedElections));
+                
+                // Remove any published results for this election
+                const publishedResults = JSON.parse(localStorage.getItem("publishedResults")) || {};
+                if (publishedResults[electionId]) {
+                    delete publishedResults[electionId];
+                    localStorage.setItem("publishedResults", JSON.stringify(publishedResults));
+                }
+                
+                // Clear current election if it was the deleted one
+                const currentElection = localStorage.getItem("currentElection");
+                if (currentElection === electionId) {
+                    localStorage.removeItem("currentElection");
+                }
+                
+                // Update the UI
+                loadElections();
+                document.getElementById("candidateTable").innerHTML = "";
+                document.getElementById("candidateResults").innerHTML = "";
+                
+                alert(`Election "${election.name}" has been successfully deleted.`);
+                updateResultStatus();
+            }
+        }
+    </script>
+
